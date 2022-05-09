@@ -1,3 +1,4 @@
+
 // ----------------------------------------
 // Functions:
 const movePhysics = (
@@ -36,7 +37,6 @@ const bulletArray = (arr) => {
     arr[i].position.add(arr[i].velocity);
   }
 };
-
 const createBullet = () => {
   return new THREE.Mesh(
     new THREE.SphereGeometry(0.01, 50, 50),
@@ -149,7 +149,7 @@ scene.fog = new THREE.Fog(0x777777, 0, 750);
 // You can delete the two lines above when we have the skybox
 
 const camera = new THREE.PerspectiveCamera(
-  90,
+  100,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
@@ -160,6 +160,21 @@ const controls = new THREE.PointerLockControls(camera, renderer.domElement);
 window.addEventListener("click", () => {
   controls.lock();
 });
+
+var mtLoader = new THREE.MTLLoader();
+mtLoader.setTexturePath("./Assets/Models/");
+mtLoader.setPath("./Assets/Models/");
+mtLoader.load("AssaultRifle2_4.mtl" , function(materials){
+  materials.preload();
+  var objLoader = new THREE.OBJLoader();
+  objLoader.setMaterials(materials);
+  objLoader.setPath("./Assets/Models/");
+  objLoader.load("AssaultRifle2_4.obj", function(object){
+    
+    scene.add(object)
+  });
+});
+
 
 const planeGeometry = new THREE.PlaneGeometry(400, 400, 100, 100);
 const planeMaterial = new THREE.MeshStandardMaterial({
