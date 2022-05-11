@@ -121,6 +121,8 @@ const mouseUp = () => {
 
 // ----------------------------------------
 // Initialize variables:
+const skyboxImage = 'arid2';
+
 let moveForward = false;
 let moveBack = false;
 let moveLeft = false;
@@ -143,13 +145,31 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-// This is just to see better
-scene.background = new THREE.Color(0xffffff);
-scene.fog = new THREE.Fog(0x777777, 0, 750);
-// You can delete the two lines above when we have the skybox
+
+let materialArray = [];
+let texture_ft = new THREE.TextureLoader().load( 'https://i.ibb.co/4RMh4yW/arid2-ft.jpg');
+let texture_bk = new THREE.TextureLoader().load( 'https://i.ibb.co/BzprVmY/arid2-bk.jpg');
+let texture_up = new THREE.TextureLoader().load( 'https://i.ibb.co/QdTh2N5/arid2-up.jpg');
+let texture_dn = new THREE.TextureLoader().load( 'https://i.ibb.co/3vXGDFy/arid2-dn.jpg');
+let texture_rt = new THREE.TextureLoader().load( 'https://i.ibb.co/QPkp1gZ/arid2-rt.jpg');
+let texture_lf = new THREE.TextureLoader().load( 'https://i.ibb.co/HVvN38y/arid2-lf.jpg');
+  
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_ft }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_bk }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_up }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_dn }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_rt }));
+materialArray.push(new THREE.MeshBasicMaterial( { map: texture_lf }));
+   
+for (let i = 0; i < 6; i++)
+  materialArray[i].side = THREE.BackSide;
+   
+let skyboxGeo = new THREE.BoxGeometry( 1000, 1000, 1000);
+let skybox = new THREE.Mesh( skyboxGeo, materialArray );
+scene.add( skybox );
 
 const camera = new THREE.PerspectiveCamera(
-  100,
+  90,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
@@ -176,14 +196,6 @@ mtLoader.load("AssaultRifle2_4.mtl" , function(materials){
 });
 
 
-const planeGeometry = new THREE.PlaneGeometry(400, 400, 100, 100);
-const planeMaterial = new THREE.MeshStandardMaterial({
-  color: 0xffffff,
-  side: THREE.DoubleSide,
-});
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotateX(-Math.PI / 2);
-scene.add(plane);
 
 const globalLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
 globalLight.position.set(0.5, 1, 0.75);
@@ -206,8 +218,9 @@ let arrow = new THREE.ArrowHelper(
   3,
   0x00ff00
 );
-
 const animate = () => {
+  //mesh.rotation.x += 0.005;
+  //mesh.rotation.y += 0.005;
   requestAnimationFrame(animate);
 
   const time = performance.now();
