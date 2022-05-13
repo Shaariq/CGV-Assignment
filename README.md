@@ -1,4 +1,4 @@
-# CGV-Assignment
+# FPS Aim Trainer - COMS3006A (CGV)
 
 ### How to run code
 First install dependencies:
@@ -9,15 +9,15 @@ This project uses a simple express.js server to run three.js. To start the serve
 ```bash
 $ npm start
 ```
+Open http://127.0.0.1:3000 to view the project. 
+
 
 ### To Do List:
-* World (skybox)
-* Plane
-* Gun Models
-* Randomly spawn targets
+* Collision Physics
+* Rotating Skybox
+* Multiple Levels
 * Target models
 * Scoreboard
-* Controller
-* Camera Movement
+* Add 3D Models to populate world
+* Some lighting effects
 
-Open http://127.0.0.1:3000 to view the project. 
