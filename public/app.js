@@ -1,3 +1,5 @@
+// CGV Assignment - FPS AIM TRAINER
+
 // ----------------------------------------
 // Functions:
 const movePhysics = (
