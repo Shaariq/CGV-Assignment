@@ -119,7 +119,6 @@ const mouseUp = () => {
 
 // ----------------------------------------
 // Initialize variables:
-const skyboxImage = "arid2";
 
 let moveForward = false;
 let moveBack = false;
@@ -144,24 +143,46 @@ document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 
+var skybox = null; // I set the skybox to null and also made it global so I could change to diiferent skyboxes
+
+// these are the different array's that hold the urls for the textures for the different skyboxes 
+var AridArray = ["https://i.ibb.co/4RMh4yW/arid2-ft.jpg", "https://i.ibb.co/BzprVmY/arid2-bk.jpg", 
+"https://i.ibb.co/QdTh2N5/arid2-up.jpg", "https://i.ibb.co/3vXGDFy/arid2-dn.jpg", 
+"https://i.ibb.co/QPkp1gZ/arid2-rt.jpg", "https://i.ibb.co/HVvN38y/arid2-lf.jpg"]
+
+var CocoaArray = ["https://i.ibb.co/TgdMcTs/cocoa-ft.jpg", "https://i.ibb.co/W39zpjS/cocoa-bk.jpg", 
+"https://i.ibb.co/wBDXQC4/cocoa-up.jpg", "https://i.ibb.co/fGD2N9m/cocoa-dn.jpg", 
+"https://i.ibb.co/4Pnc12G/cocoa-rt.jpg", "https://i.ibb.co/DLL8VSc/cocoa-lf.jpg"]
+
+var MeadowArray = ["https://i.ibb.co/THRrZb3/meadow-ft.jpg", "https://i.ibb.co/jMzKjq8/meadow-bk.jpg", 
+"https://i.ibb.co/m0W3m6q/meadow-up.jpg", "https://i.ibb.co/kDC3kR1/meadow-dn.jpg", 
+"https://i.ibb.co/fYzTTvr/meadow-rt.jpg", "https://i.ibb.co/4SDrs9M/meadow-lf.jpg"]
+
+var HellArray = ["https://i.ibb.co/yX98hch/flame-ft.jpg", "https://i.ibb.co/Z6rR9jx/flame-bk.jpg", 
+"https://i.ibb.co/nQ43ck2/flame-up.jpg", "https://i.ibb.co/w6nkJBL/flame-dn.jpg", 
+"https://i.ibb.co/frFz93V/flame-rt.jpg", "https://i.ibb.co/hg74qN4/flame-lf.jpg"]
+
+
+
+function MakeSkyBox(ft, bk, up, dn, rt, lf) { // this function is used to create the skyboxe, I pass the urls as parameters
 let materialArray = [];
 let texture_ft = new THREE.TextureLoader().load(
-  "https://i.ibb.co/4RMh4yW/arid2-ft.jpg"
+  ft
 );
 let texture_bk = new THREE.TextureLoader().load(
-  "https://i.ibb.co/BzprVmY/arid2-bk.jpg"
+  bk
 );
 let texture_up = new THREE.TextureLoader().load(
-  "https://i.ibb.co/QdTh2N5/arid2-up.jpg"
+  up
 );
 let texture_dn = new THREE.TextureLoader().load(
-  "https://i.ibb.co/3vXGDFy/arid2-dn.jpg"
+  dn
 );
 let texture_rt = new THREE.TextureLoader().load(
-  "https://i.ibb.co/QPkp1gZ/arid2-rt.jpg"
+  rt
 );
 let texture_lf = new THREE.TextureLoader().load(
-  "https://i.ibb.co/HVvN38y/arid2-lf.jpg"
+  lf
 );
 
 materialArray.push(new THREE.MeshBasicMaterial({ map: texture_ft }));
@@ -174,8 +195,36 @@ materialArray.push(new THREE.MeshBasicMaterial({ map: texture_lf }));
 for (let i = 0; i < 6; i++) materialArray[i].side = THREE.BackSide;
 
 let skyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000);
-let skybox = new THREE.Mesh(skyboxGeo, materialArray);
+skybox = new THREE.Mesh(skyboxGeo, materialArray);
 scene.add(skybox);
+}
+
+MakeSkyBox(AridArray[0], AridArray[1], AridArray[2], AridArray[3], AridArray[4], AridArray[5]); // I called this so that the user is not welcomed with a black screen but rather the arid texture
+
+window.onload = function(){  // this function is called when the window is first loaded 
+
+var arid = document.getElementById("arid"); // this is used to get the id's for the different buttons from the html
+var cocoa = document.getElementById("cocoa");
+var meadow = document.getElementById("meadow");
+var hell = document.getElementById("hell");
+
+cocoa.onclick = function CocoaSkyBox(){ // the click function is called when the user clicks the button on the game 
+  MakeSkyBox(CocoaArray[0], CocoaArray[1], CocoaArray[2], CocoaArray[3], CocoaArray[4], CocoaArray[5]);
+};
+
+arid.onclick = function AridSkyBox(){
+  MakeSkyBox(AridArray[0], AridArray[1], AridArray[2], AridArray[3], AridArray[4], AridArray[5]);
+};
+
+meadow.onclick = function MeadowSkyBox(){
+  MakeSkyBox(MeadowArray[0], MeadowArray[1], MeadowArray[2], MeadowArray[3], MeadowArray[4], MeadowArray[5]);
+};
+
+hell.onclick = function HellSkyBox(){
+  MakeSkyBox(HellArray[0], HellArray[1], HellArray[2], HellArray[3], HellArray[4], HellArray[5]);
+};
+};
+
 
 const camera = new THREE.PerspectiveCamera(
   90,
@@ -187,7 +236,7 @@ camera.position.set(0, 2, 2);
 scene.add(camera);
 
 const controls = new THREE.PointerLockControls(camera, renderer.domElement);
-window.addEventListener("click", () => {
+window.addEventListener("dblclick", () => {
   controls.lock();
 });
 
