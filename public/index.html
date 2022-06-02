@@ -1,55 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGV Assignment</title>
-    <style>
-        body {
-            margin: 0;
-        }
-        .buttons {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-
-}
-button {
-  margin-bottom: 6px;
-  width: 120px;
-  font-size: 14px;
-  outline: none;
-  background: #333;
-  color: #ddd;
-  border: none;
-  text-transform: uppercase;
-  opacity: .5;
-}
-button:hover {
-  background: #222;
-  color: #eee;
-}
-button:active {
-  background: #111;
-  color: #fff;
-}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Call of CGV</title>
 </head>
+<style>
+  body {
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+  }
+  .screen {
+height: 100vh;
+width: 100%;
+overflow: hidden;
+position: relative;
+display: flex;
+justify-content: start;
+align-items: center;
+}
+video {
+position: absolute;
+min-width: 100%;
+min-height: 100vh;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+z-index: -1;
+}
+audio{
+  display: none;
+}
+.menu{
+  color: #fff;
+  margin-left: 4em;
+  text-transform: uppercase;
+}
+.menu h1{
+  font-size: 4em;
+  letter-spacing: 30px;
+  display: block;
+  margin-bottom: 0.5em;
+}
+.menu h2{
+  font-weight: 300;
+  font-size: 2.5em;
+  text-align: center;
+  letter-spacing: 10px;
+  position: relative;
+}
+.menu{
+  text-align: center;
+}
+.menu h3::before,
+.menu h3::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  width: 3em;
+  height: 3px;
+}
+.menu h3::before{
+  left: 0;
+}
+.menu h3::after{
+  right: 0;
+}
+.menu a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+}
+#sound{
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 1em;
+  color: #fff;
+  cursor: pointer;
+}
+.menu a:hover,
+#sound:hover{
+  color: #dbdbdb;
+}
+
+</style>
 <body>
-    <script src="./Assets/three.min.js"></script>
-    <script src="./Assets/OBJLoader.js"></script>
-    <script src="./Assets/MTLLoader.js"></script>
-    <script src="./Assets/OrbitControls.js"></script>
-    <script src="./Assets/PointerLockControls.js"></script>
-    <script src="./app.js"></script>
-    <div class="buttons">
-        <button id="arid">Arid</button>
-        <button id="cocoa">Cocoa</button>
-        <button id="meadow">Meadow</button>
-        <button id="hell">Hell</button>
+    <div class = "screen">
+      <i class="fas fa-volume-mute-2x" id= "sound"></i>
+      
+      <video autoplay loop muted id = "videoBackground">
+        <source src="../resources/background.mp4" type="video/mp4"/>
+      </video>
+
+      <audio id="audioClick">
+        <source src="../resources/buttonclick.wav"
+        type="audio/wav"
+        />
+      </audio>
+
+      <audio id="audioHover">
+        <source src="../resources/buttonrollover.wav"
+        type="audio/wav"
+        />
+      </audio>
+      <div class="menu">
+        <h1>Call Of CGV</h1>
+        <h2>The Death Of Course</h2>
+        <p><h3><a href="GameScene.html"> < Start Game > </Start> </a></h3></p>
     </div>
+  </div>
 </body>
 </html>

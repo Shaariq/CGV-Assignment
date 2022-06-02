@@ -27,10 +27,10 @@
                     this.object.fromDeclaration = fromDeclaration !== false;
                     return;
                 }
-                const previousMaterial = this.object && typeof this.object.currentMaterial === 'function' ? this.object.currentMaterial() : undefined;
-                if (this.object && typeof this.object._finalize === 'function') this.object._finalize(true);
+                const previousMaterial = this.object && typeof this.object.currentMaterial === "function" ? this.object.currentMaterial() : undefined;
+                if (this.object && typeof this.object._finalize === "function") this.object._finalize(true);
                 this.object = {
-                    name: name1 || '',
+                    name: name1 || "",
                     fromDeclaration: fromDeclaration !== false,
                     geometry: {
                         vertices: [],
@@ -47,8 +47,8 @@
                         if (previous && (previous.inherited || previous.groupCount <= 0)) this.materials.splice(previous.index, 1);
                         const material = {
                             index: this.materials.length,
-                            name: name || '',
-                            mtllib: Array.isArray(libraries) && libraries.length > 0 ? libraries[libraries.length - 1] : '',
+                            name: name || "",
+                            mtllib: Array.isArray(libraries) && libraries.length > 0 ? libraries[libraries.length - 1] : "",
                             smooth: previous !== undefined ? previous.smooth : this.smooth,
                             groupStart: previous !== undefined ? previous.groupEnd : 0,
                             groupEnd: -1,
@@ -56,7 +56,7 @@
                             inherited: false,
                             clone: function(index) {
                                 const cloned = {
-                                    index: typeof index === 'number' ? index : this.index,
+                                    index: typeof index === "number" ? index : this.index,
                                     name: this.name,
                                     mtllib: this.mtllib,
                                     smooth: this.smooth,
@@ -87,7 +87,7 @@
                             for(let mi = this.materials.length - 1; mi >= 0; mi--)if (this.materials[mi].groupCount <= 0) this.materials.splice(mi, 1);
                         } // Guarantee at least one empty material, this makes the creation later more straight forward.
                         if (end && this.materials.length === 0) this.materials.push({
-                            name: '',
+                            name: "",
                             smooth: this.smooth
                         });
                         return lastMultiMaterial;
@@ -97,7 +97,7 @@
                 // If a usemtl declaration is encountered while this new object is being parsed, it will
                 // overwrite the inherited material. Exception being that there was already face declarations
                 // to the inherited material, then it will be preserved for proper MultiMaterial continuation.
-                if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === 'function') {
+                if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === "function") {
                     const declared = previousMaterial.clone(0);
                     declared.inherited = true;
                     this.object.materials.push(declared);
@@ -105,7 +105,7 @@
                 this.objects.push(this.object);
             },
             finalize: function() {
-                if (this.object && typeof this.object._finalize === 'function') this.object._finalize(true);
+                if (this.object && typeof this.object._finalize === "function") this.object._finalize(true);
             },
             parseVertexIndex: function(value, len) {
                 const index = parseInt(value, 10);
@@ -189,7 +189,7 @@
                 let ic = this.parseVertexIndex(c, vLen);
                 this.addVertex(ia, ib, ic);
                 this.addColor(ia, ib, ic); // normals
-                if (na !== undefined && na !== '') {
+                if (na !== undefined && na !== "") {
                     const nLen = this.normals.length;
                     ia = this.parseNormalIndex(na, nLen);
                     ib = this.parseNormalIndex(nb, nLen);
@@ -197,7 +197,7 @@
                     this.addNormal(ia, ib, ic);
                 } else this.addFaceNormal(ia, ib, ic);
                  // uvs
-                if (ua !== undefined && ua !== '') {
+                if (ua !== undefined && ua !== "") {
                     const uvLen = this.uvs.length;
                     ia = this.parseUVIndex(ua, uvLen);
                     ib = this.parseUVIndex(ub, uvLen);
@@ -208,7 +208,7 @@
                 this.addDefaultUV();
             },
             addPointGeometry: function(vertices) {
-                this.object.geometry.type = 'Points';
+                this.object.geometry.type = "Points";
                 const vLen = this.vertices.length;
                 for(let vi = 0, l = vertices.length; vi < l; vi++){
                     const index = this.parseVertexIndex(vertices[vi], vLen);
@@ -217,14 +217,14 @@
                 }
             },
             addLineGeometry: function(vertices, uvs) {
-                this.object.geometry.type = 'Line';
+                this.object.geometry.type = "Line";
                 const vLen = this.vertices.length;
                 const uvLen = this.uvs.length;
                 for(let vi = 0, l = vertices.length; vi < l; vi++)this.addVertexLine(this.parseVertexIndex(vertices[vi], vLen));
                 for(let uvi = 0, l1 = uvs.length; uvi < l1; uvi++)this.addUVLine(this.parseUVIndex(uvs[uvi], uvLen));
             }
         };
-        state.startObject('', false);
+        state.startObject("", false);
         return state;
     } //
     class OBJLoader extends THREE.Loader {
@@ -254,26 +254,26 @@
         }
         parse(text) {
             const state = new ParserState();
-            if (text.indexOf('\r\n') !== -1) // This is faster than String.split with regex that splits on both
-            text = text.replace(/\r\n/g, '\n');
-            if (text.indexOf('\\\n') !== -1) // join lines separated by a line continuation character (\)
-            text = text.replace(/\\\n/g, '');
-            const lines = text.split('\n');
-            let line = '', lineFirstChar = '';
+            if (text.indexOf("\r\n") !== -1) // This is faster than String.split with regex that splits on both
+            text = text.replace(/\r\n/g, "\n");
+            if (text.indexOf("\\\n") !== -1) // join lines separated by a line continuation character (\)
+            text = text.replace(/\\\n/g, "");
+            const lines = text.split("\n");
+            let line = "", lineFirstChar = "";
             let lineLength = 0;
             let result = []; // Faster to just trim left side of the line. Use if available.
-            const trimLeft = typeof ''.trimLeft === 'function';
+            const trimLeft = typeof "".trimLeft === "function";
             for(let i = 0, l = lines.length; i < l; i++){
                 line = lines[i];
                 line = trimLeft ? line.trimLeft() : line.trim();
                 lineLength = line.length;
                 if (lineLength === 0) continue;
                 lineFirstChar = line.charAt(0); // @todo invoke passed in handler if any
-                if (lineFirstChar === '#') continue;
-                if (lineFirstChar === 'v') {
+                if (lineFirstChar === "#") continue;
+                if (lineFirstChar === "v") {
                     const data = line.split(/\s+/);
                     switch(data[0]){
-                        case 'v':
+                        case "v":
                             state.vertices.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
                             if (data.length >= 7) {
                                 _color.setRGB(parseFloat(data[4]), parseFloat(data[5]), parseFloat(data[6])).convertSRGBToLinear();
@@ -281,21 +281,21 @@
                             } else // if no colors are defined, add placeholders so color and vertex indices match
                             state.colors.push(undefined, undefined, undefined);
                             break;
-                        case 'vn':
+                        case "vn":
                             state.normals.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
                             break;
-                        case 'vt':
+                        case "vt":
                             state.uvs.push(parseFloat(data[1]), parseFloat(data[2]));
                             break;
                     }
-                } else if (lineFirstChar === 'f') {
+                } else if (lineFirstChar === "f") {
                     const lineData = line.slice(1).trim();
                     const vertexData = lineData.split(/\s+/);
                     const faceVertices = []; // Parse the face vertex data into an easy to work with format
                     for(let j = 0, jl = vertexData.length; j < jl; j++){
                         const vertex = vertexData[j];
                         if (vertex.length > 0) {
-                            const vertexParts = vertex.split('/');
+                            const vertexParts = vertex.split("/");
                             faceVertices.push(vertexParts);
                         }
                     } // Draw an edge between the first vertex and all subsequent vertices to form an n-gon
@@ -305,20 +305,20 @@
                         const v3 = faceVertices[j1 + 1];
                         state.addFace(v1[0], v2[0], v3[0], v1[1], v2[1], v3[1], v1[2], v2[2], v3[2]);
                     }
-                } else if (lineFirstChar === 'l') {
-                    const lineParts = line.substring(1).trim().split(' ');
+                } else if (lineFirstChar === "l") {
+                    const lineParts = line.substring(1).trim().split(" ");
                     let lineVertices = [];
                     const lineUVs = [];
-                    if (line.indexOf('/') === -1) lineVertices = lineParts;
+                    if (line.indexOf("/") === -1) lineVertices = lineParts;
                     else for(let li = 0, llen = lineParts.length; li < llen; li++){
-                        const parts = lineParts[li].split('/');
-                        if (parts[0] !== '') lineVertices.push(parts[0]);
-                        if (parts[1] !== '') lineUVs.push(parts[1]);
+                        const parts = lineParts[li].split("/");
+                        if (parts[0] !== "") lineVertices.push(parts[0]);
+                        if (parts[1] !== "") lineUVs.push(parts[1]);
                     }
                     state.addLineGeometry(lineVertices, lineUVs);
-                } else if (lineFirstChar === 'p') {
+                } else if (lineFirstChar === "p") {
                     const lineData = line.slice(1).trim();
-                    const pointData = lineData.split(' ');
+                    const pointData = lineData.split(" ");
                     state.addPointGeometry(pointData);
                 } else if ((result = _object_pattern.exec(line)) !== null) {
                     // o object_name
@@ -326,7 +326,7 @@
                     // g group_name
                     // WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
                     // let name = result[ 0 ].slice( 1 ).trim();
-                    const name = (' ' + result[0].slice(1).trim()).slice(1);
+                    const name = (" " + result[0].slice(1).trim()).slice(1);
                     state.startObject(name);
                 } else if (_material_use_pattern.test(line)) // material
                 state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
@@ -335,8 +335,8 @@
                 else if (_map_use_pattern.test(line)) // the line is parsed but ignored since the loader assumes textures are defined MTL files
                 // (according to https://www.okino.com/conv/imp_wave.htm, 'usemap' is the old-style Wavefront texture reference method)
                 console.warn('THREE.OBJLoader: Rendering identifier "usemap" not supported. Textures must be defined in MTL files.');
-                else if (lineFirstChar === 's') {
-                    result = line.split(' '); // smooth shading
+                else if (lineFirstChar === "s") {
+                    result = line.split(" "); // smooth shading
                     // @todo Handle files that have varying smooth values for a set of faces inside one geometry,
                     // but does not define a usemtl for each face set.
                     // This should be detected and a dummy material created (later MultiMaterial and geometry groups).
@@ -353,14 +353,14 @@
         	 * than 0."
         	 */ if (result.length > 1) {
                         const value = result[1].trim().toLowerCase();
-                        state.object.smooth = value !== '0' && value !== 'off';
+                        state.object.smooth = value !== "0" && value !== "off";
                     } else // ZBrush can produce "s" lines #11707
                     state.object.smooth = true;
                     const material = state.object.currentMaterial();
                     if (material) material.smooth = state.object.smooth;
                 } else {
                     // Handle null terminated files without exception
-                    if (line === '\0') continue;
+                    if (line === "\0") continue;
                     console.warn('THREE.OBJLoader: Unexpected line: "' + line + '"');
                 }
             }
@@ -372,23 +372,23 @@
                 const object = state.objects[i1];
                 const geometry = object.geometry;
                 const materials = object.materials;
-                const isLine = geometry.type === 'Line';
-                const isPoints = geometry.type === 'Points';
+                const isLine = geometry.type === "Line";
+                const isPoints = geometry.type === "Points";
                 let hasVertexColors = false; // Skip o/g line declarations that did not follow with any faces
                 if (geometry.vertices.length === 0) continue;
                 const buffergeometry = new THREE.BufferGeometry();
-                buffergeometry.setAttribute('position', new THREE.Float32BufferAttribute(geometry.vertices, 3));
-                if (geometry.normals.length > 0) buffergeometry.setAttribute('normal', new THREE.Float32BufferAttribute(geometry.normals, 3));
+                buffergeometry.setAttribute("position", new THREE.Float32BufferAttribute(geometry.vertices, 3));
+                if (geometry.normals.length > 0) buffergeometry.setAttribute("normal", new THREE.Float32BufferAttribute(geometry.normals, 3));
                 if (geometry.colors.length > 0) {
                     hasVertexColors = true;
-                    buffergeometry.setAttribute('color', new THREE.Float32BufferAttribute(geometry.colors, 3));
+                    buffergeometry.setAttribute("color", new THREE.Float32BufferAttribute(geometry.colors, 3));
                 }
-                if (geometry.hasUVIndices === true) buffergeometry.setAttribute('uv', new THREE.Float32BufferAttribute(geometry.uvs, 2));
+                if (geometry.hasUVIndices === true) buffergeometry.setAttribute("uv", new THREE.Float32BufferAttribute(geometry.uvs, 2));
                  // Create materials
                 const createdMaterials = [];
                 for(let mi = 0, miLen = materials.length; mi < miLen; mi++){
                     const sourceMaterial = materials[mi];
-                    const materialHash = sourceMaterial.name + '_' + sourceMaterial.smooth + '_' + hasVertexColors;
+                    const materialHash = sourceMaterial.name + "_" + sourceMaterial.smooth + "_" + hasVertexColors;
                     let material = state.materials[materialHash];
                     if (this.materials !== null) {
                         material = this.materials.create(sourceMaterial.name); // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
@@ -446,9 +446,9 @@
                     sizeAttenuation: false
                 });
                 const buffergeometry = new THREE.BufferGeometry();
-                buffergeometry.setAttribute('position', new THREE.Float32BufferAttribute(state.vertices, 3));
+                buffergeometry.setAttribute("position", new THREE.Float32BufferAttribute(state.vertices, 3));
                 if (state.colors.length > 0 && state.colors[0] !== undefined) {
-                    buffergeometry.setAttribute('color', new THREE.Float32BufferAttribute(state.colors, 3));
+                    buffergeometry.setAttribute("color", new THREE.Float32BufferAttribute(state.colors, 3));
                     material.vertexColors = true;
                 }
                 const points = new THREE.Points(buffergeometry, material);

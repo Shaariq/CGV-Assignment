@@ -56,7 +56,7 @@ THREE.MTLLoader.prototype = {
         this.texturePath = path;
     },
     setBaseUrl: function(path) {
-        console.warn('THREE.MTLLoader: .setBaseUrl() is deprecated. Use .setTexturePath( path ) for texture path or .setPath( path ) for general base path instead.');
+        console.warn("THREE.MTLLoader: .setBaseUrl() is deprecated. Use .setTexturePath( path ) for texture path or .setPath( path ) for general base path instead.");
         this.setTexturePath(path);
     },
     setCrossOrigin: function(value) {
@@ -76,27 +76,27 @@ THREE.MTLLoader.prototype = {
 	 * @note In order for relative texture references to resolve correctly
 	 * you must call setPath and/or setTexturePath explicitly prior to parse.
 	 */ parse: function(text) {
-        var lines = text.split('\n');
+        var lines = text.split("\n");
         var info = {};
         var delimiter_pattern = /\s+/;
         var materialsInfo = {};
         for(var i = 0; i < lines.length; i++){
             var line = lines[i];
             line = line.trim();
-            if (line.length === 0 || line.charAt(0) === '#') continue;
-            var pos = line.indexOf(' ');
+            if (line.length === 0 || line.charAt(0) === "#") continue;
+            var pos = line.indexOf(" ");
             var key = pos >= 0 ? line.substring(0, pos) : line;
             key = key.toLowerCase();
-            var value = pos >= 0 ? line.substring(pos + 1) : '';
+            var value = pos >= 0 ? line.substring(pos + 1) : "";
             value = value.trim();
-            if (key === 'newmtl') {
+            if (key === "newmtl") {
                 // New material
                 info = {
                     name: value
                 };
                 materialsInfo[value] = info;
             } else if (info) {
-                if (key === 'ka' || key === 'kd' || key === 'ks') {
+                if (key === "ka" || key === "kd" || key === "ks") {
                     var ss = value.split(delimiter_pattern, 3);
                     info[key] = [
                         parseFloat(ss[0]),
@@ -127,7 +127,7 @@ THREE.MTLLoader.prototype = {
  *                                  Default: false
  * @constructor
  */ THREE.MTLLoader.MaterialCreator = function(baseUrl, options) {
-    this.baseUrl = baseUrl || '';
+    this.baseUrl = baseUrl || "";
     this.options = options;
     this.materialsInfo = {};
     this.materials = {};
@@ -138,7 +138,7 @@ THREE.MTLLoader.prototype = {
 };
 THREE.MTLLoader.MaterialCreator.prototype = {
     constructor: THREE.MTLLoader.MaterialCreator,
-    crossOrigin: 'Anonymous',
+    crossOrigin: "Anonymous",
     setCrossOrigin: function(value) {
         this.crossOrigin = value;
     },
@@ -164,9 +164,9 @@ THREE.MTLLoader.MaterialCreator.prototype = {
                 var value = mat[prop];
                 var lprop = prop.toLowerCase();
                 switch(lprop){
-                    case 'kd':
-                    case 'ka':
-                    case 'ks':
+                    case "kd":
+                    case "ka":
+                    case "ks":
                         // Diffuse color (color under white light) using RGB values
                         if (this.options && this.options.normalizeRGB) value = [
                             value[0] / 255,
@@ -214,7 +214,7 @@ THREE.MTLLoader.MaterialCreator.prototype = {
             side: this.side
         };
         function resolveURL(baseUrl, url) {
-            if (typeof url !== 'string' || url === '') return '';
+            if (typeof url !== "string" || url === "") return "";
             // Absolute URL
             if (/^https?:\/\//i.test(url)) return url;
             return baseUrl + url;
@@ -232,46 +232,46 @@ THREE.MTLLoader.MaterialCreator.prototype = {
         for(var prop in mat){
             var value1 = mat[prop];
             var n;
-            if (value1 === '') continue;
+            if (value1 === "") continue;
             switch(prop.toLowerCase()){
                 // Ns is material specular exponent
-                case 'kd':
+                case "kd":
                     // Diffuse color (color under white light) using RGB values
                     params.color = new THREE.Color().fromArray(value1);
                     break;
-                case 'ks':
+                case "ks":
                     // Specular color (color when light is reflected from shiny surface) using RGB values
                     params.specular = new THREE.Color().fromArray(value1);
                     break;
-                case 'map_kd':
+                case "map_kd":
                     // Diffuse texture map
                     setMapForType("map", value1);
                     break;
-                case 'map_ks':
+                case "map_ks":
                     // Specular map
                     setMapForType("specularMap", value1);
                     break;
-                case 'norm':
+                case "norm":
                     setMapForType("normalMap", value1);
                     break;
-                case 'map_bump':
-                case 'bump':
+                case "map_bump":
+                case "bump":
                     // Bump texture map
                     setMapForType("bumpMap", value1);
                     break;
-                case 'ns':
+                case "ns":
                     // The specular exponent (defines the focus of the specular highlight)
                     // A high exponent results in a tight, concentrated highlight. Ns values normally range from 0 to 1000.
                     params.shininess = parseFloat(value1);
                     break;
-                case 'd':
+                case "d":
                     n = parseFloat(value1);
                     if (n < 1) {
                         params.opacity = n;
                         params.transparent = true;
                     }
                     break;
-                case 'tr':
+                case "tr":
                     n = parseFloat(value1);
                     if (n > 0) {
                         params.opacity = 1 - n;
@@ -292,22 +292,22 @@ THREE.MTLLoader.MaterialCreator.prototype = {
         };
         var items = value.split(/\s+/);
         var pos;
-        pos = items.indexOf('-bm');
+        pos = items.indexOf("-bm");
         if (pos >= 0) {
             matParams.bumpScale = parseFloat(items[pos + 1]);
             items.splice(pos, 2);
         }
-        pos = items.indexOf('-s');
+        pos = items.indexOf("-s");
         if (pos >= 0) {
             texParams.scale.set(parseFloat(items[pos + 1]), parseFloat(items[pos + 2]));
             items.splice(pos, 4); // we expect 3 parameters here!
         }
-        pos = items.indexOf('-o');
+        pos = items.indexOf("-o");
         if (pos >= 0) {
             texParams.offset.set(parseFloat(items[pos + 1]), parseFloat(items[pos + 2]));
             items.splice(pos, 4); // we expect 3 parameters here!
         }
-        texParams.url = items.join(' ').trim();
+        texParams.url = items.join(" ").trim();
         return texParams;
     },
     loadTexture: function(url, mapping, onLoad, onProgress, onError) {

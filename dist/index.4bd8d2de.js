@@ -5,13 +5,13 @@
     //    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
     //    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
     const _changeEvent = {
-        type: 'change'
+        type: "change"
     };
     const _startEvent = {
-        type: 'start'
+        type: "start"
     };
     const _endEvent = {
-        type: 'end'
+        type: "end"
     };
     class OrbitControls extends THREE.EventDispatcher {
         constructor(object, domElement1){
@@ -20,7 +20,7 @@
             if (domElement1 === document) console.error('THREE.OrbitControls: "document" should not be used as the target "domElement". Please use "renderer.domElement" instead.');
             this.object = object;
             this.domElement = domElement1;
-            this.domElement.style.touchAction = 'none'; // disable touch scroll
+            this.domElement.style.touchAction = "none"; // disable touch scroll
             // Set to false to disable this control
             this.enabled = true; // "target" sets the location of focus, where the object orbits around
             this.target = new THREE.Vector3(); // How far you can dolly in and out ( PerspectiveCamera only )
@@ -54,10 +54,10 @@
             this.autoRotateSpeed = 2.0; // 30 seconds per orbit when fps is 60
             // The four arrow keys
             this.keys = {
-                LEFT: 'ArrowLeft',
-                UP: 'ArrowUp',
-                RIGHT: 'ArrowRight',
-                BOTTOM: 'ArrowDown'
+                LEFT: "ArrowLeft",
+                UP: "ArrowUp",
+                RIGHT: "ArrowRight",
+                BOTTOM: "ArrowDown"
             }; // Mouse buttons
             this.mouseButtons = {
                 LEFT: THREE.MOUSE.ROTATE,
@@ -84,7 +84,7 @@
                 return this.object.position.distanceTo(this.target);
             };
             this.listenToKeyEvents = function(domElement) {
-                domElement.addEventListener('keydown', onKeyDown);
+                domElement.addEventListener("keydown", onKeyDown);
                 this._domElementKeyEvents = domElement;
             };
             this.saveState = function() {
@@ -163,13 +163,13 @@
                 };
             }();
             this.dispose = function() {
-                scope.domElement.removeEventListener('contextmenu', onContextMenu);
-                scope.domElement.removeEventListener('pointerdown', onPointerDown);
-                scope.domElement.removeEventListener('pointercancel', onPointerCancel);
-                scope.domElement.removeEventListener('wheel', onMouseWheel);
-                scope.domElement.removeEventListener('pointermove', onPointerMove);
-                scope.domElement.removeEventListener('pointerup', onPointerUp);
-                if (scope._domElementKeyEvents !== null) scope._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
+                scope.domElement.removeEventListener("contextmenu", onContextMenu);
+                scope.domElement.removeEventListener("pointerdown", onPointerDown);
+                scope.domElement.removeEventListener("pointercancel", onPointerCancel);
+                scope.domElement.removeEventListener("wheel", onMouseWheel);
+                scope.domElement.removeEventListener("pointermove", onPointerMove);
+                scope.domElement.removeEventListener("pointerup", onPointerUp);
+                if (scope._domElementKeyEvents !== null) scope._domElementKeyEvents.removeEventListener("keydown", onKeyDown);
                  //scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
             }; //
             // internals
@@ -253,7 +253,7 @@
                         panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
                     } else {
                         // camera neither orthographic nor perspective
-                        console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+                        console.warn("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.");
                         scope.enablePan = false;
                     }
                 };
@@ -265,7 +265,7 @@
                     scope.object.updateProjectionMatrix();
                     zoomChanged = true;
                 } else {
-                    console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+                    console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
                     scope.enableZoom = false;
                 }
             }
@@ -276,7 +276,7 @@
                     scope.object.updateProjectionMatrix();
                     zoomChanged = true;
                 } else {
-                    console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+                    console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
                     scope.enableZoom = false;
                 }
             } //
@@ -426,24 +426,24 @@
                 if (scope.enabled === false) return;
                 if (pointers.length === 0) {
                     scope.domElement.setPointerCapture(event.pointerId);
-                    scope.domElement.addEventListener('pointermove', onPointerMove);
-                    scope.domElement.addEventListener('pointerup', onPointerUp);
+                    scope.domElement.addEventListener("pointermove", onPointerMove);
+                    scope.domElement.addEventListener("pointerup", onPointerUp);
                 } //
                 addPointer(event);
-                if (event.pointerType === 'touch') onTouchStart(event);
+                if (event.pointerType === "touch") onTouchStart(event);
                 else onMouseDown(event);
             }
             function onPointerMove(event) {
                 if (scope.enabled === false) return;
-                if (event.pointerType === 'touch') onTouchMove(event);
+                if (event.pointerType === "touch") onTouchMove(event);
                 else onMouseMove(event);
             }
             function onPointerUp(event) {
                 removePointer(event);
                 if (pointers.length === 0) {
                     scope.domElement.releasePointerCapture(event.pointerId);
-                    scope.domElement.removeEventListener('pointermove', onPointerMove);
-                    scope.domElement.removeEventListener('pointerup', onPointerUp);
+                    scope.domElement.removeEventListener("pointermove", onPointerMove);
+                    scope.domElement.removeEventListener("pointerup", onPointerUp);
                 }
                 scope.dispatchEvent(_endEvent);
                 state = STATE.NONE;
@@ -620,10 +620,10 @@
                 const pointer = event.pointerId === pointers[0].pointerId ? pointers[1] : pointers[0];
                 return pointerPositions[pointer.pointerId];
             } //
-            scope.domElement.addEventListener('contextmenu', onContextMenu);
-            scope.domElement.addEventListener('pointerdown', onPointerDown);
-            scope.domElement.addEventListener('pointercancel', onPointerCancel);
-            scope.domElement.addEventListener('wheel', onMouseWheel, {
+            scope.domElement.addEventListener("contextmenu", onContextMenu);
+            scope.domElement.addEventListener("pointerdown", onPointerDown);
+            scope.domElement.addEventListener("pointercancel", onPointerCancel);
+            scope.domElement.addEventListener("wheel", onMouseWheel, {
                 passive: false
             }); // force an update at start
             this.update();

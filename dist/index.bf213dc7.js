@@ -1,14 +1,14 @@
 (function() {
-    const _euler = new THREE.Euler(0, 0, 0, 'YXZ');
+    const _euler = new THREE.Euler(0, 0, 0, "YXZ");
     const _vector = new THREE.Vector3();
     const _changeEvent = {
-        type: 'change'
+        type: "change"
     };
     const _lockEvent = {
-        type: 'lock'
+        type: "lock"
     };
     const _unlockEvent = {
-        type: 'unlock'
+        type: "unlock"
     };
     const _PI_2 = Math.PI / 2;
     class PointerLockControls extends THREE.EventDispatcher {
@@ -46,17 +46,17 @@
                 }
             }
             function onPointerlockError() {
-                console.error('THREE.PointerLockControls: Unable to use Pointer Lock API');
+                console.error("THREE.PointerLockControls: Unable to use Pointer Lock API");
             }
             this.connect = function() {
-                scope.domElement.ownerDocument.addEventListener('mousemove', onMouseMove);
-                scope.domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange);
-                scope.domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError);
+                scope.domElement.ownerDocument.addEventListener("mousemove", onMouseMove);
+                scope.domElement.ownerDocument.addEventListener("pointerlockchange", onPointerlockChange);
+                scope.domElement.ownerDocument.addEventListener("pointerlockerror", onPointerlockError);
             };
             this.disconnect = function() {
-                scope.domElement.ownerDocument.removeEventListener('mousemove', onMouseMove);
-                scope.domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange);
-                scope.domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError);
+                scope.domElement.ownerDocument.removeEventListener("mousemove", onMouseMove);
+                scope.domElement.ownerDocument.removeEventListener("pointerlockchange", onPointerlockChange);
+                scope.domElement.ownerDocument.removeEventListener("pointerlockerror", onPointerlockError);
             };
             this.dispose = function() {
                 this.disconnect();
