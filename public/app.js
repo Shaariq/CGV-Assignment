@@ -56,6 +56,10 @@ const shootBullet = (shootState, arr, start, end, gunFire) => {
     gunFire.play();
     let bullet = createBullet();
 
+    let bulletBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+    bulletBB.setFromObject(bullet);
+    console.log(bulletBB);
+
     bullet.alive = true;
 
     setTimeout(() => {
@@ -116,6 +120,31 @@ const mouseUp = () => {
   shoot = false;
 };
 // ----------------------------------------
+
+let targetArr = [];
+
+function targets(){
+
+  var targetGeometry = new THREE.BoxGeometry(20, 20, 20);
+  var targetMaterial = new THREE.MeshNormalMaterial();
+
+  for(var i = 0; i < 45; i++){
+    var targetMesh = new THREE.Mesh(targetGeometry, targetMaterial);
+
+    targetMesh.position.x = (Math.random() - 0.5) * 1000;
+    targetMesh.position.y = 35;
+    targetMesh.position.z = (Math.random() - 0.5) * 1000;
+
+    let targetBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+    targetBox.setFromObject(targetMesh);
+    //console.log(targetBox);
+
+    targetArr.push(targetMesh);
+    scene.add(targetMesh);
+  }
+
+  console.log(targetArr.length);
+}
 
 // ----------------------------------------
 // Initialize variables:
@@ -340,6 +369,8 @@ let raycaster = new THREE.Raycaster(
   camera.getWorldPosition(new THREE.Vector3()),
   camera.getWorldDirection(new THREE.Vector3())
 );
+
+targets();
 
 const animate = () => {
   //mesh.rotation.x += 0.005;
