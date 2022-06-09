@@ -123,12 +123,12 @@ const movePhysics = (
   if (moveForward || moveBack) {
     velocity.z -= direction.z * 200 * delta;
     walkingSound.play();
-    mixer.update(0.02);
+    mixer.update(0.005);
   }
   if (moveRight || moveLeft) {
     velocity.x -= direction.x * 200 * delta;
     walkingSound.play();
-    mixer.update(0.02);
+    mixer.update(0.005);
   }
   if (!moveRight && !moveLeft && !moveForward && !moveBack) {
     walkingSound.pause();
@@ -848,8 +848,8 @@ const animate = () => {
       for (let j = ai.length-1; j >= 0; j--) {
         let a = ai[j];
         let aiPosition = a.position;
-        if (bulletPosition.x < aiPosition.x + 20 && bulletPosition.x > aiPosition.x - 20 &&
-            bulletPosition.z < aiPosition.z + 20 && bulletPosition.z > aiPosition.z - 20) {
+        if (bulletPosition.x < aiPosition.x + 2 && bulletPosition.x > aiPosition.x - 2 &&
+            bulletPosition.z < aiPosition.z + 2 && bulletPosition.z > aiPosition.z - 2) {
           bullets.splice(i, 1);
           console.log("Target has been hit")
           scene.remove(b);
