@@ -6,8 +6,8 @@ var UNITSIZE = 30;
 var WALLHEIGHT = UNITSIZE / 3;
 var ai = []; // list to store all the AI bots 
 var aiGeo = new THREE.BoxGeometry(5,5,5); // the geometry of the AI bots
-var NUMAI = 10; // this is the number of bots that our game will have 
-var MOVESPEED = 10;
+var NUMAI = 15; // this is the number of bots that our game will have 
+var MOVESPEED = 20;
 let SCORE = 0;
 
 var map = [ // 1  2  3  4  5  6  7  8  9
@@ -228,7 +228,7 @@ let moveLeft = false;
 let moveRight = false;
 
 let shoot = false;
-const startingMin = 2;
+const startingMin = 1.5;
 let time2 = startingMin * 60;
 
 
@@ -403,6 +403,7 @@ window.onload = function () {
   
   var arid = document.getElementById("arid"); // this is used to get the id's for the different buttons from the html
   var hell = document.getElementById("hell");
+
 
   arid.onclick = function AridSkyBox() {
     MakeSkyBox(
@@ -646,7 +647,7 @@ let raycaster = new THREE.Raycaster(
 
 const animate = () => {
   var delta = clock.getDelta();
-	var aispeed = delta * MOVESPEED;
+  var aispeed = delta * MOVESPEED;
   requestAnimationFrame(animate);
 
   const time = performance.now();
