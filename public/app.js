@@ -2,6 +2,108 @@
 
 // ----------------------------------------
 // Functions:
+var UNITSIZE = 30;
+var WALLHEIGHT = UNITSIZE / 3;
+var healthCube;
+var ai = []; // list to store all the AI bots 
+var aiGeo = new THREE.BoxGeometry(5,5,5); // the geometry of the AI bots
+var NUMAI = 5; // this is the number of bots that our game will have 
+var PROJECTILEDAMAGE = 20;
+var lastHealthPickup = 0;
+var kills = 0; 
+var health = 100;
+var MOVESPEED = 100;
+var LOOKSPEED = 0.075;
+var BULLETMOVESPEED = MOVESPEED * 5;
+
+var map = [ // 1  2  3  4  5  6  7  8  9
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
+           [1, 1, 0, 0, 0, 0, 0, 1, 1, 1,], // 1
+           [1, 1, 0, 0, 2, 0, 0, 0, 0, 1,], // 2
+           [1, 0, 0, 0, 0, 2, 0, 0, 0, 1,], // 3
+           [1, 0, 0, 2, 0, 0, 2, 0, 0, 1,], // 4
+           [1, 0, 0, 0, 2, 0, 0, 0, 1, 1,], // 5
+           [1, 1, 1, 0, 0, 0, 0, 1, 1, 1,], // 6
+           [1, 1, 1, 0, 0, 1, 0, 0, 1, 1,], // 7
+           [1, 1, 1, 1, 1, 1, 0, 0, 1, 1,], // 8
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
+           ], mapW = map.length, mapH = map[0].length;
+
+function setWalls(){
+  units = mapW;
+  // setting up the walls
+  var cube = new THREE.BoxGeometry(UNITSIZE, WALLHEIGHT, UNITSIZE);
+	var materials = [
+	                 new THREE.MeshLambertMaterial({/*color: 0x00CCAA,*/map: THREE.ImageUtils.loadTexture('Assets/resources/wall-1.jpg')}),
+	                 new THREE.MeshLambertMaterial({/*color: 0xC5EDA0,*/map: THREE.ImageUtils.loadTexture('Assets/resources/wall-2.jpg')}),
+	                 new THREE.MeshLambertMaterial({color: 0xFBEBCD}),
+	                 ];
+	for (var i = 0; i < mapW; i++) {
+		for (var j = 0, m = map[i].length; j < m; j++) {
+			if (map[i][j]) {
+				var wall = new THREE.Mesh(cube, materials[map[i][j]-1]);
+				wall.position.x = (i - units/2) * UNITSIZE;
+				wall.position.y = WALLHEIGHT/2;
+				wall.position.z = (j - units/2) * UNITSIZE;
+				scene.add(wall);
+			}
+		}
+	}
+}
+// the getRandBetween returns a random value between the two given variables. 
+function getRandBetween(lo, hi) {
+  return parseInt(Math.floor(Math.random()*(hi-lo+1))+lo, 10);
+ }
+ function setupAI() {
+	for (var i = 0; i < NUMAI; i++) {
+		addAI();
+	}
+}
+function getMapSector(v) {
+	var x = Math.floor((v.x + UNITSIZE / 2) / UNITSIZE + mapW/2);
+	var z = Math.floor((v.z + UNITSIZE / 2) / UNITSIZE + mapW/2);
+	return {x: x, z: z};
+}
+function addAI() {
+	var c = getMapSector(camera.position);
+	var aiMaterial = new THREE.MeshBasicMaterial({/*color: 0xEE3333,*/map: THREE.ImageUtils.loadTexture('Assets/resources/face.png')});
+	var o = new THREE.Mesh(aiGeo, aiMaterial);
+	do {
+		var x = getRandBetween(0, mapW-1);
+		var z = getRandBetween(0, mapH-1);
+	} while (map[x][z] > 0 || (x == c.x && z == c.z));
+	x = Math.floor(x - mapW/2) * UNITSIZE;
+	z = Math.floor(z - mapW/2) * UNITSIZE;
+	o.position.set(x, UNITSIZE * 0.15, z);
+	o.health = 100;
+	//o.path = getAIpath(o);
+	o.pathPos = 1;
+	o.lastRandomX = Math.random();
+	o.lastRandomZ = Math.random();
+	o.lastShot = Date.now(); // Higher-fidelity timers aren't a big deal here.
+	ai.push(o);
+	scene.add(o);
+}
+// this function is used to calculate the distance between two points. 
+function distance(x1, y1, x2, y2) {
+	return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+}
+/**
+ * Check whether a Vector3 overlaps with a wall.
+ *
+ * @param v
+ *   A THREE.Vector3 object representing a point in space.
+ *   Passing cam.position is especially useful.
+ * @returns {Boolean}
+ *   true if the vector is inside a wall; false otherwise.
+ */
+ function checkWallCollision(v) {
+	var c = getMapSector(v);
+	return map[c.x][c.z] > 0;
+}
+
+
+
 const movePhysics = (
   time,
   prevTime,
@@ -48,7 +150,7 @@ const bulletArray = (arr) => {
 };
 const createBullet = () => {
   return new THREE.Mesh(
-    new THREE.SphereGeometry(0.015, 50, 50),
+    new THREE.SphereGeometry(0.100, 200, 200),
     new THREE.MeshBasicMaterial({ color: 0x22ffdd })
   );
 };
@@ -122,7 +224,7 @@ const mouseUp = () => {
   shoot = false;
 };
 // ----------------------------------------
-
+/*
 let targetArr = [];
 
 function targets() {
@@ -146,7 +248,7 @@ function targets() {
 
   console.log(targetArr.length);
 }
-
+*/
 // ----------------------------------------
 // Initialize variables:
 
@@ -158,7 +260,7 @@ let moveRight = false;
 let shoot = false;
 
 let bullets = [];
-
+var clock = new THREE.Clock(); // Used in render() for controls.update()
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 // ----------------------------------------
@@ -174,6 +276,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
+setWalls();
+
 
 var skybox = null; // I set the skybox to null and also made it global so I could change to diiferent skyboxes
 
@@ -237,6 +341,13 @@ function MakeSkyBox(ft, bk, up, dn, rt, lf) {
   skybox = new THREE.Mesh(skyboxGeo, materialArray);
   scene.add(skybox);
 }
+$(document).ready(function() {
+  $('body').append('<canvas id="radar" width="200" height="200"></canvas>');
+  $('body').append('<div id="hud"><p>Health: <span id="health">100</span><br />Score: <span id="score">0</span></p></div>');
+  
+  $('body').append('<div id="hurt"></div>');
+})
+
 
 let plane;
 const textureLoader = new THREE.TextureLoader();
@@ -285,9 +396,50 @@ MakeSkyBox(
   AridArray[5]
 ); // I called this so that the user is not welcomed with a black screen but rather the arid texture
 
+// this function is called when the window is first loaded
 window.onload = function () {
-  // this function is called when the window is first loaded
-
+  function drawRadar() {
+    var c = getMapSector(camera.position), context = document.getElementById('radar').getContext('2d');
+    context.font = '10px Helvetica';
+    for (var i = 0; i < mapW; i++) {
+      for (var j = 0, m = map[i].length; j < m; j++) {
+        var d = 0;
+        for (var k = 0, n = ai.length; k < n; k++) {
+          var e = getMapSector(ai[k].position);
+          if (i == e.x && j == e.z) {
+            d++;
+          }
+        }
+        if (i == c.x && j == c.z && d == 0) {
+          context.fillStyle = '#0000FF';
+          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
+        }
+        else if (i == c.x && j == c.z) {
+          context.fillStyle = '#AA33FF';
+          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
+          context.fillStyle = '#000000';
+          context.fillText(''+d, i*20+8, j*20+12);
+        }
+        else if (d > 0 && d < 10) {
+          context.fillStyle = '#FF0000';
+          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
+          context.fillStyle = '#000000';
+          context.fillText(''+d, i*20+8, j*20+12);
+        }
+        else if (map[i][j] > 0) {
+          context.fillStyle = '#666666';
+          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
+        }
+        else {
+          context.fillStyle = '#CCCCCC';
+          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
+        }
+      }
+    }
+  }
+  drawRadar();
+  setInterval(drawRadar, 1000);
+  
   var arid = document.getElementById("arid"); // this is used to get the id's for the different buttons from the html
   var cocoa = document.getElementById("cocoa");
   var meadow = document.getElementById("meadow");
@@ -494,6 +646,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 2, 2);
 scene.add(camera);
+setupAI();
 
 const controls = new THREE.PointerLockControls(camera, renderer.domElement);
 window.addEventListener("dblclick", () => {
@@ -524,7 +677,7 @@ mtLoader.load("AssaultRifle2_4.mtl", function (materials) {
 
 var manager = new THREE.LoadingManager();
 manager.onProgress = function (item, loaded, total) {
-  console.log(item, loaded, total);
+  //console.log(item, loaded, total);
 };
 
 // model
@@ -626,11 +779,9 @@ let raycaster = new THREE.Raycaster(
   camera.getWorldDirection(new THREE.Vector3())
 );
 
-targets();
-
 const animate = () => {
-  //mesh.rotation.x += 0.005;
-  //mesh.rotation.y += 0.005;
+  var delta = clock.getDelta(), speed = delta * BULLETMOVESPEED;
+	var aispeed = delta * MOVESPEED;
   requestAnimationFrame(animate);
 
   const time = performance.now();
@@ -665,7 +816,32 @@ const animate = () => {
   prevTime = time;
 
   let currentPosition = camera.getWorldPosition(new THREE.Vector3());
-
+  /*
+  // move the AI around the grid 
+  for (var i = ai.length-1; i >= 0; i--) {
+		var a = ai[i];
+		// Move AI
+		var r = Math.random();
+		if (r > 0.995) {
+			a.lastRandomX = Math.random() * 2 - 1;
+			a.lastRandomZ = Math.random() * 2 - 1;
+		}
+		a.translateX(aispeed * a.lastRandomX);
+		a.translateZ(aispeed * a.lastRandomZ);
+		var c = getMapSector(a.position);
+		if (c.x < 0 || c.x >= mapW || c.y < 0 || c.y >= mapH || checkWallCollision(a.position)) {
+			a.translateX(-2 * aispeed * a.lastRandomX);
+			a.translateZ(-2 * aispeed * a.lastRandomZ);
+			a.lastRandomX = Math.random() * 2 - 1;
+			a.lastRandomZ = Math.random() * 2 - 1;
+		}
+		if (c.x < -1 || c.x > mapW || c.z < -1 || c.z > mapH) {
+			ai.splice(i, 1);
+			scene.remove(a);
+			addAI();
+		}
+	}
+*/
   renderer.render(scene, camera);
 };
 
@@ -677,3 +853,5 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+
