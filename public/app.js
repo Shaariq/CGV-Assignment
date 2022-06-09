@@ -46,6 +46,8 @@ function setWalls(){
 				wall.position.x = (i - units/2) * UNITSIZE;
 				wall.position.y = WALLHEIGHT/2;
 				wall.position.z = (j - units/2) * UNITSIZE;
+        wall.receiveShadow = true;
+        wall.castShadow = true;
 				scene.add(wall);
 			}
 		}
@@ -151,8 +153,8 @@ const bulletArray = (arr) => {
 };
 const createBullet = () => {
   return new THREE.Mesh(
-    new THREE.SphereGeometry(0.100, 200, 200),
-    new THREE.MeshBasicMaterial({ color: 0x22ffdd })
+    new THREE.SphereGeometry(0.05, 200, 200),
+    new THREE.MeshBasicMaterial({ color: 0xBEC2CB })
   );
 };
 
@@ -767,12 +769,12 @@ const walkingSound = new THREE.Audio(listener);
 audioLoader.load("./Assets/Audio/walking.wav", function (buffer) {
   walkingSound.setBuffer(buffer);
   walkingSound.setLoop(true);
-  walkingSound.setVolume(0.8);
+  walkingSound.setVolume(0.9);
 });
 
 const gunSound = new THREE.Audio(listener);
 
-audioLoader.load("./Assets/Audio/gunfire.mp3", function (buffer) {
+audioLoader.load("./Assets/Audio/gunshot.mp3", function (buffer) {
   gunSound.setBuffer(buffer);
   gunSound.setLoop(true);
   gunSound.setVolume(0.5);
@@ -875,12 +877,15 @@ const animate = () => {
 	}
   if(time2 > 0 && ai.length == 0){
     console.log("Player wins")
+    window.open('win_screen.html', '_self')
   }
   if(time2 == 0 && ai.length > 0){
     console.log("Player lost")
+    window.open('lose_screen.html', '_self')
   }
   if(time2 == 0 && ai.length == 0){
     console.log("Player wins")
+    window.open('win_screen.html', '_self')
   }
   
   renderer.render(scene, camera);
