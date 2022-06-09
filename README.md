@@ -25,6 +25,6 @@ Open http://127.0.0.1:3000 to view the project.
 
 For this project, our group NoobieSoft, a group of 4 members were tasked to build a 3D computer game with 3 levels/stages that would be solely browser based using the Three.js graphics framework.
 
-#What Makes up the Game
+# What Makes up the Game
 
 FPS Aim Trainer is comprised of 10 main components: sky boxes, game-plane/map/playing environment, walls, bots, bot-AI, bullet physics, collision physics scoreboard and timer.
