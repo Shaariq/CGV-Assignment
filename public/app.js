@@ -12,9 +12,10 @@ var PROJECTILEDAMAGE = 20;
 var lastHealthPickup = 0;
 var kills = 0; 
 var health = 100;
-var MOVESPEED = 100;
+var MOVESPEED = 10;
 var LOOKSPEED = 0.075;
 var BULLETMOVESPEED = MOVESPEED * 5;
+let SCORE = 0;
 
 var map = [ // 1  2  3  4  5  6  7  8  9
            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
@@ -169,7 +170,7 @@ const shootBullet = (shootState, arr, start, end, gunFire) => {
     setTimeout(() => {
       bullet.alive = false;
       scene.remove(bullet);
-    }, 10000);
+    }, 500);
 
     bullet.position.set(start.x, start.y + 0.5, start.z);
 
@@ -816,7 +817,7 @@ const animate = () => {
   prevTime = time;
 
   let currentPosition = camera.getWorldPosition(new THREE.Vector3());
-  /*
+  
   // move the AI around the grid 
   for (var i = ai.length-1; i >= 0; i--) {
 		var a = ai[i];
@@ -840,8 +841,29 @@ const animate = () => {
 			scene.remove(a);
 			addAI();
 		}
+    // This is where we handle collision physics
+    for (let i = bullets.length-1; i >= 0; i--) {
+      let b = bullets[i], bulletPosition = b.position
+      for (let j = ai.length-1; j >= 0; j--) {
+        let a = ai[j];
+        let aiPosition = a.position;
+        if (bulletPosition.x < aiPosition.x + 20 && bulletPosition.x > aiPosition.x - 20 &&
+            bulletPosition.z < aiPosition.z + 20 && bulletPosition.z > aiPosition.z - 20) {
+          bullets.splice(i, 1);
+          console.log("Target has been hit")
+          scene.remove(b);
+          scene.remove(a);
+          ai.splice(j, 1)
+          break;
+        }
+      }
+    }
+
+    SCORE = Math.abs(NUMAI - ai.length)
+    // Here is the user's score 
+    console.log("Current Score: " + SCORE);
+    
 	}
-*/
   renderer.render(scene, camera);
 };
 
