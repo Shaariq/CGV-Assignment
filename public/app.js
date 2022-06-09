@@ -259,6 +259,9 @@ let moveLeft = false;
 let moveRight = false;
 
 let shoot = false;
+const startingMin = 0.5;
+let time2 = startingMin * 60;
+
 
 let bullets = [];
 var clock = new THREE.Clock(); // Used in render() for controls.update()
@@ -342,12 +345,6 @@ function MakeSkyBox(ft, bk, up, dn, rt, lf) {
   skybox = new THREE.Mesh(skyboxGeo, materialArray);
   scene.add(skybox);
 }
-$(document).ready(function() {
-  $('body').append('<canvas id="radar" width="200" height="200"></canvas>');
-  $('body').append('<div id="hud"><p>Health: <span id="health">100</span><br />Score: <span id="score">0</span></p></div>');
-  
-  $('body').append('<div id="hurt"></div>');
-})
 
 
 let plane;
@@ -399,6 +396,16 @@ MakeSkyBox(
 
 // this function is called when the window is first loaded
 window.onload = function () {
+  const countdownEle = document.getElementById("countdown");
+  function updateCountdown(){
+    let seconds = time2%60;
+    countdownEle.innerHTML = `${"00"}:${seconds}`;
+    if(time2 > 0){
+      time2--;
+    }
+  }
+  setInterval(updateCountdown, 1000);
+
   function drawRadar() {
     var c = getMapSector(camera.position), context = document.getElementById('radar').getContext('2d');
     context.font = '10px Helvetica';
@@ -440,6 +447,8 @@ window.onload = function () {
   }
   drawRadar();
   setInterval(drawRadar, 1000);
+
+
   
   var arid = document.getElementById("arid"); // this is used to get the id's for the different buttons from the html
   var cocoa = document.getElementById("cocoa");
@@ -859,10 +868,29 @@ const animate = () => {
         }
       }
     }
+<<<<<<< Updated upstream
 	}
   SCORE = Math.abs(NUMAI - ai.length)
     // Here is the user's score 
   console.log("Current Score: " + SCORE);
+=======
+
+    SCORE = Math.abs(NUMAI - ai.length)
+    // Here is the user's score 
+    console.log("Current Score: " + SCORE);
+    $("#score").html(SCORE);
+	}
+  if(time2 > 0 && ai.length == 0){
+    console.log("Player wins")
+  }
+  if(time2 == 0 && ai.length > 0){
+    console.log("Player lost")
+  }
+  if(time2 == 0 && ai.length == 0){
+    console.log("Player wins")
+  }
+  
+>>>>>>> Stashed changes
   renderer.render(scene, camera);
 };
 

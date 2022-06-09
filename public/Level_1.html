@@ -50,6 +50,25 @@
       background: #111;
       color: #fff;
     }
+    #js_countdown {
+  text-align: center;
+  color: #fff;
+  }
+  #countdown{
+  background: #fff;
+  color: #fff;
+  width: 100px;
+  margin-top: -15cm;
+  margin-left: 16.5cm;
+  }
+  #css_radar{
+  margin-top:8cm;
+  margin-right: 30cm;
+  }
+  #scoreTxt{
+  margin-top: -1cm;
+  }
+
   </style>
 </head>
 
@@ -73,7 +92,17 @@
   <a href="HomePage.html">
     <button class="buttons2"> Back to Main Menu </button>
   </a>
-
+  <div id="js_countdown">
+    <div id="countdown">
+      00:30
+    </div>  
+  <div>
+  <div id = "css_radar">
+      <canvas id="radar" width="200" height="200"></canvas>
+  </div>  
+  <div id="scoreTxt">
+  Score: <span id="score">0</span>
+  </div>
 </body>
 
 </html>
