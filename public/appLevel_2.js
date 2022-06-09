@@ -1,12 +1,12 @@
 // CGV Assignment - FPS AIM TRAINER
 
-// ----------------------------------------
+/*/------------------------------------------------------------------------------------------/*/
 // Functions:
 var UNITSIZE = 30;
 var WALLHEIGHT = UNITSIZE / 3;
 var ai = []; // list to store all the AI bots 
 var aiGeo = new THREE.BoxGeometry(5,5,5); // the geometry of the AI bots
-var NUMAI = 15; // this is the number of bots that our game will have 
+var NUMAI = 10; // this is the number of bots that our game will have 
 var MOVESPEED = 20;
 let SCORE = 0;
 
@@ -22,7 +22,11 @@ var map = [ // 1  2  3  4  5  6  7  8  9
            [1, 1, 1, 1, 1, 1, 0, 0, 1, 1,], // 8
            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
            ], mapW = map.length, mapH = map[0].length;
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * A function that setup the walls
+ */
+/*/------------------------------------------------------------------------------------------/*/
 function setWalls(){
   units = mapW;
   // setting up the walls
@@ -46,20 +50,46 @@ function setWalls(){
 		}
 	}
 }
-// the getRandBetween returns a random value between the two given variables. 
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * the getRandBetween returns a random value between the two given variables.
+ * @param {*} lo 
+ * @param {*} hi 
+ * @returns 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 function getRandBetween(lo, hi) {
   return parseInt(Math.floor(Math.random()*(hi-lo+1))+lo, 10);
  }
+ /*/------------------------------------------------------------------------------------------/*/
+ /**
+  * the setupAi function adds an ai objects
+  */
+ /*/------------------------------------------------------------------------------------------/*/
  function setupAI() {
-	for (var i = 0; i < NUMAI; i++) {
-		addAI();
-	}
+ 
+  for (var i = 0; i < NUMAI; i++) {
+          addAI();
+    }  
 }
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * the getMapSector get coordinates in the scene 
+ * @param {*} v 
+ * @returns an array of coords
+ */
+/*/------------------------------------------------------------------------------------------/*/
 function getMapSector(v) {
 	var x = Math.floor((v.x + UNITSIZE / 2) / UNITSIZE + mapW/2);
 	var z = Math.floor((v.z + UNITSIZE / 2) / UNITSIZE + mapW/2);
 	return {x: x, z: z};
 }
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ *the function creates an AI objects
+ *adds the objecs to the scene
+ */
+/*/------------------------------------------------------------------------------------------/*/
 function addAI() {
 	var c = getMapSector(camera.position);
 	var aiMaterial = new THREE.MeshBasicMaterial({/*color: 0xEE3333,*/map: THREE.ImageUtils.loadTexture('Assets/resources/face.png')});
@@ -80,10 +110,20 @@ function addAI() {
 	ai.push(o);
 	scene.add(o);
 }
-// this function is used to calculate the distance between two points. 
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * this function is used to calculate the distance between two points. 
+ * @param {*} x1 
+ * @param {*} y1 
+ * @param {*} x2 
+ * @param {*} y2 
+ * @returns 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 function distance(x1, y1, x2, y2) {
 	return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 }
+/*/------------------------------------------------------------------------------------------/*/
 /**
  * Check whether a Vector3 overlaps with a wall.
  *
@@ -93,23 +133,14 @@ function distance(x1, y1, x2, y2) {
  * @returns {Boolean}
  *   true if the vector is inside a wall; false otherwise.
  */
+/*/------------------------------------------------------------------------------------------/*/
  function checkWallCollision(v) {
 	var c = getMapSector(v);
 	return map[c.x][c.z] > 0;
 }
 
+const movePhysics = ( time, prevTime, velocity, moveForward, moveBack, moveRight, moveLeft, walkingSound) => {
 
-
-const movePhysics = (
-  time,
-  prevTime,
-  velocity,
-  moveForward,
-  moveBack,
-  moveRight,
-  moveLeft,
-  walkingSound
-) => {
   const delta = (time - prevTime) / 1000;
 
   velocity.z -= velocity.z * 10.0 * delta;
@@ -132,6 +163,12 @@ const movePhysics = (
   controls.moveForward(-velocity.z * delta);
   controls.moveRight(-velocity.x * delta);
 };
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * A function that defines a bullet array
+ * @param {*} arr 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const bulletArray = (arr) => {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] == undefined) {
@@ -144,13 +181,28 @@ const bulletArray = (arr) => {
     arr[i].position.add(arr[i].velocity);
   }
 };
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * The function creates objects
+ * @returns bullets objects
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const createBullet = () => {
   return new THREE.Mesh(
     new THREE.SphereGeometry(0.05, 200, 200),
     new THREE.MeshBasicMaterial({ color: 0xBEC2CB })
   );
 };
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * the function set position ,velocity and the sound of the bullet and adds it to the scene
+ * @param {*} shootState 
+ * @param {*} arr 
+ * @param {*} start 
+ * @param {*} end 
+ * @param {*} gunFire 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const shootBullet = (shootState, arr, start, end, gunFire) => {
   if (shootState) {
     gunFire.play();
@@ -177,7 +229,16 @@ const shootBullet = (shootState, arr, start, end, gunFire) => {
     gunFire.pause();
   }
 };
-
+/*/----------------------------------------------------------------------------/*/
+/**
+ * A function to setup the control keys true to be used when playing the game
+ * W = forward
+ * A = Left
+ * S = Back
+ * D = Right
+ * @param {} e 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const onKeyDown = (e) => {
   switch (e.code) {
     case "KeyW":
@@ -194,7 +255,16 @@ const onKeyDown = (e) => {
       break;
   }
 };
-
+/*/----------------------------------------------------------------------------/*/
+/**
+ * A function to setup the control keys false to be used when playing the game
+ * W = forward
+ * A = Left
+ * S = Back
+ * D = Right
+ * @param {*} e 
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const onKeyUp = (e) => {
   switch (e.code) {
     case "KeyW":
@@ -211,443 +281,95 @@ const onKeyUp = (e) => {
       break;
   }
 };
-
+/*/-----------------------------------------------------------------------------------------/*/
+/**
+ * A function to set mousedown to enable or allow shooting
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const mouseDown = () => {
   shoot = true;
 };
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ *A function to set mousedown to disable or disallow shooting
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const mouseUp = () => {
   shoot = false;
 };
-// ----------------------------------------
+
+document.addEventListener("keydown", onKeyDown);
+document.addEventListener("keyup", onKeyUp);
+document.addEventListener("mousedown", mouseDown);
+document.addEventListener("mouseup", mouseUp);
+/*/----------------------------------------------------------------/*/
+
+/*/------------------------------------------------------------------------------------------/*/
 // Initialize variables:
 
 let moveForward = false;
 let moveBack = false;
 let moveLeft = false;
 let moveRight = false;
-
 let shoot = false;
 const startingMin = 1.5;
 let time2 = startingMin * 60;
-
-
 let bullets = [];
 var clock = new THREE.Clock(); // Used in render() for controls.update()
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-// ----------------------------------------
-
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-});
-
+let prevTime = performance.now();
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * Setup the renderer
+ */
+/*/------------------------------------------------------------------------------------------/*/
+const renderer = new THREE.WebGLRenderer({ antialias: true,});
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
-setWalls();
-
-
-var skybox = null; // I set the skybox to null and also made it global so I could change to diiferent skyboxes
-
-// these are the different array's that hold the urls for the textures for the different skyboxes
-var AridArray = [
-  "https://i.ibb.co/4RMh4yW/arid2-ft.jpg",
-  "https://i.ibb.co/BzprVmY/arid2-bk.jpg",
-  "https://i.ibb.co/QdTh2N5/arid2-up.jpg",
-  "https://i.ibb.co/3vXGDFy/arid2-dn.jpg",
-  "https://i.ibb.co/QPkp1gZ/arid2-rt.jpg",
-  "https://i.ibb.co/HVvN38y/arid2-lf.jpg",
-];
-var HellArray = [
-  "https://i.ibb.co/yX98hch/flame-ft.jpg",
-  "https://i.ibb.co/Z6rR9jx/flame-bk.jpg",
-  "https://i.ibb.co/nQ43ck2/flame-up.jpg",
-  "https://i.ibb.co/w6nkJBL/flame-dn.jpg",
-  "https://i.ibb.co/frFz93V/flame-rt.jpg",
-  "https://i.ibb.co/hg74qN4/flame-lf.jpg",
-];
-
-function MakeSkyBox(ft, bk, up, dn, rt, lf) {
-  // this function is used to create the skyboxe, I pass the urls as parameters
-  let materialArray = [];
-  let texture_ft = new THREE.TextureLoader().load(ft);
-  let texture_bk = new THREE.TextureLoader().load(bk);
-  let texture_up = new THREE.TextureLoader().load(up);
-  let texture_dn = new THREE.TextureLoader().load(dn);
-  let texture_rt = new THREE.TextureLoader().load(rt);
-  let texture_lf = new THREE.TextureLoader().load(lf);
-
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_ft }));
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_bk }));
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_up }));
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_dn }));
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_rt }));
-  materialArray.push(new THREE.MeshBasicMaterial({ map: texture_lf }));
-
-  for (let i = 0; i < 6; i++) materialArray[i].side = THREE.BackSide;
-
-  let skyboxGeo = new THREE.BoxGeometry(1000, 1000, 1000);
-  skybox = new THREE.Mesh(skyboxGeo, materialArray);
-  scene.add(skybox);
-}
-
-
-let plane;
-const textureLoader = new THREE.TextureLoader();
-const groundTexture = textureLoader.load(
-  "./Assets/PlaneTexture/Dirt/Grass_005_BaseColor.jpg"
-);
-const tilesNormalMap = textureLoader.load(
-  "./Assets/PlaneTexture/Dirt/Grass_005_Normal.jpg"
-);
-const tilesHeightMap = textureLoader.load(
-  "./Assets/PlaneTexture/Dirt/Grass_005_Height.jpg"
-);
-const tilesRoughnessMap = textureLoader.load(
-  "./Assets/PlaneTexture/Dirt/Grass_005_Roughness.jpg"
-);
-const tilesAmbientOcclusionMap = textureLoader.load(
-  "./Assets/PlaneTexture/Dirt/Grass_005_AmbientOcclusion.jpg"
-);
-
-groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-groundTexture.repeat.set(100, 100);
-groundTexture.anisotropy = 16;
-groundTexture.encoding = THREE.sRGBEncoding;
-
-const groundMaterial = new THREE.MeshPhongMaterial({
-  map: groundTexture,
-  normalMap: tilesNormalMap,
-  displacementMap: tilesHeightMap,
-  displacementScale: 0.05,
-  aoMap: tilesAmbientOcclusionMap,
-});
-
-const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
-plane = new THREE.Mesh(planeGeometry, groundMaterial);
-plane.rotateX(-Math.PI / 2);
-plane.geometry.attributes.uv2 = plane.geometry.attributes.uv;
-plane.receiveShadow = true;
-scene.add(plane);
-
-MakeSkyBox(
-  AridArray[0],
-  AridArray[1],
-  AridArray[2],
-  AridArray[3],
-  AridArray[4],
-  AridArray[5]
-); // I called this so that the user is not welcomed with a black screen but rather the arid texture
-
-// this function is called when the window is first loaded
-window.onload = function () {
-  const countdownEle = document.getElementById("countdown");
-  function updateCountdown(){
-    const min = Math.floor(time2/60);
-    let seconds = time2%60;
-    countdownEle.innerHTML = `${min}:${seconds}`;
-    if(time2 > 0){
-      time2--;
-    }
-  }
-  setInterval(updateCountdown, 1000);
-
-  function drawRadar() {
-    var c = getMapSector(camera.position), context = document.getElementById('radar').getContext('2d');
-    context.font = '10px Helvetica';
-    for (var i = 0; i < mapW; i++) {
-      for (var j = 0, m = map[i].length; j < m; j++) {
-        var d = 0;
-        for (var k = 0, n = ai.length; k < n; k++) {
-          var e = getMapSector(ai[k].position);
-          if (i == e.x && j == e.z) {
-            d++;
-          }
-        }
-        if (i == c.x && j == c.z && d == 0) {
-          context.fillStyle = '#0000FF';
-          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
-        }
-        else if (i == c.x && j == c.z) {
-          context.fillStyle = '#AA33FF';
-          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
-          context.fillStyle = '#000000';
-          context.fillText(''+d, i*20+8, j*20+12);
-        }
-        else if (d > 0 && d < 10) {
-          context.fillStyle = '#FF0000';
-          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
-          context.fillStyle = '#000000';
-          context.fillText(''+d, i*20+8, j*20+12);
-        }
-        else if (map[i][j] > 0) {
-          context.fillStyle = '#666666';
-          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
-        }
-        else {
-          context.fillStyle = '#CCCCCC';
-          context.fillRect(i * 20, j * 20, (i+1)*20, (j+1)*20);
-        }
-      }
-    }
-  }
-  drawRadar();
-  setInterval(drawRadar, 1000);
-
-
-  
-  var arid = document.getElementById("arid"); // this is used to get the id's for the different buttons from the html
-  var hell = document.getElementById("hell");
-
-
-  arid.onclick = function AridSkyBox() {
-    MakeSkyBox(
-      AridArray[0],
-      AridArray[1],
-      AridArray[2],
-      AridArray[3],
-      AridArray[4],
-      AridArray[5]
-    );
-    const textureLoader = new THREE.TextureLoader();
-    const groundTexture = textureLoader.load(
-      "./Assets/PlaneTexture/Dirt/Grass_005_BaseColor.jpg"
-    );
-    const tilesNormalMap = textureLoader.load(
-      "./Assets/PlaneTexture/Dirt/Grass_005_Normal.jpg"
-    );
-    const tilesHeightMap = textureLoader.load(
-      "./Assets/PlaneTexture/Dirt/Grass_005_Height.jpg"
-    );
-    const tilesRoughnessMap = textureLoader.load(
-      "./Assets/PlaneTexture/Dirt/Grass_005_Roughness.jpg"
-    );
-    const tilesAmbientOcclusionMap = textureLoader.load(
-      "./Assets/PlaneTexture/Dirt/Grass_005_AmbientOcclusion.jpg"
-    );
-
-    groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set(100, 100);
-    groundTexture.anisotropy = 16;
-    groundTexture.encoding = THREE.sRGBEncoding;
-
-    const groundMaterial = new THREE.MeshPhongMaterial({
-      map: groundTexture,
-      normalMap: tilesNormalMap,
-      displacementMap: tilesHeightMap,
-      displacementScale: 0.05,
-      aoMap: tilesAmbientOcclusionMap,
-    });
-
-    const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
-    plane = new THREE.Mesh(planeGeometry, groundMaterial);
-    plane.rotateX(-Math.PI / 2);
-    plane.geometry.attributes.uv2 = plane.geometry.attributes.uv;
-    plane.receiveShadow = true;
-    scene.add(plane);
-  };
-
-  hell.onclick = function HellSkyBox() {
-    MakeSkyBox(
-      HellArray[0],
-      HellArray[1],
-      HellArray[2],
-      HellArray[3],
-      HellArray[4],
-      HellArray[5]
-    );
-    const textureLoader = new THREE.TextureLoader();
-    const tilesBaseColor = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_BaseColor.jpg"
-    );
-    const tilesNormalMap = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_Normal.jpg"
-    );
-    const tilesHeightMap = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_Height.jpg"
-    );
-    const tilesRoughnessMap = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_Roughness.jpg"
-    );
-    const tilesAmbientOcclusionMap = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_AmbientOcclusion.jpg"
-    );
-
-    const groundTexture = textureLoader.load(
-      "./Assets/PlaneTexture/Pebbles/Pebbles_029_BaseColor.jpg"
-    );
-    groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.repeat.set(100, 100);
-    groundTexture.anisotropy = 16;
-    groundTexture.encoding = THREE.sRGBEncoding;
-
-    const groundMaterial = new THREE.MeshPhongMaterial({
-      map: groundTexture,
-      normalMap: tilesNormalMap,
-      displacementMap: tilesHeightMap,
-      displacementScale: 0.05,
-      aoMap: tilesAmbientOcclusionMap,
-    });
-
-    const planeGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
-    plane = new THREE.Mesh(planeGeometry, groundMaterial);
-    plane.rotateX(-Math.PI / 2);
-    plane.geometry.attributes.uv2 = plane.geometry.attributes.uv;
-    plane.receiveShadow = true;
-    scene.add(plane);
-  };
-};
-
-const camera = new THREE.PerspectiveCamera(
-  90,
-  window.innerWidth / window.innerHeight,
-  0.001,
-  1000
-);
+ scene = new THREE.Scene();
+ setWalls();
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * Setup the perspective camera
+ */
+/*/------------------------------------------------------------------------------------------/*/
+camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.001, 1000);
 camera.position.set(0, 2, 2);
 scene.add(camera);
 setupAI();
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * Pointockercontrol to give access to raw movement of the mouse
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const controls = new THREE.PointerLockControls(camera, renderer.domElement);
 window.addEventListener("dblclick", () => {
   controls.lock();
 });
 
-let obj;
 
-var mtLoader = new THREE.MTLLoader();
-mtLoader.setTexturePath("./Assets/Models/");
-mtLoader.setPath("./Assets/Models/");
-mtLoader.load("AssaultRifle2_4.mtl", function (materials) {
-  materials.preload();
-  var objLoader = new THREE.OBJLoader();
-  objLoader.setMaterials(materials);
-  objLoader.setPath("./Assets/Models/");
-  objLoader.load("AssaultRifle2_4.obj", function (object) {
-    object.rotation.y = Math.PI / 1.75;
-    object.scale.set(1, 1, 1);
-    object.position.z = -0.75;
-    object.position.y = -1;
-    object.position.x = 1.5;
-    obj = object;
-    obj.castShadow = true;
-    camera.add(obj);
-  });
-});
-
-var manager = new THREE.LoadingManager();
-manager.onProgress = function (item, loaded, total) {
-  //console.log(item, loaded, total);
-};
-
-// model
-var loader = new THREE.OBJLoader(manager);
-loader.load("./Assets/Models/AssaultRifle2_4.obj", function (object) {
-  object.traverse(function (child) {
-    if (child instanceof THREE.Mesh) {
-      //child.material.map = texture;
-    }
-  });
-
-  object.rotation.y = Math.PI / 1.75;
-  object.scale.set(1, 1, 1);
-  object.position.z = -0.75;
-  object.position.y = -1;
-  object.position.x = 1.5;
-
-  // obj = object;
-  // camera.add(obj)
-});
-
-let mixer;
-const charLoader = new THREE.FBXLoader();
-charLoader.setPath("./Assets/Models/");
-charLoader.load("Character.fbx", (fbx) => {
-  fbx.scale.setScalar(0.1);
-  fbx.traverse((c) => {
-    c.castShadow = true;
-  });
-  const anim = new THREE.FBXLoader();
-  anim.setPath("./Assets/Models/");
-  anim.load("Walking.fbx", (anim) => {
-    mixer = new THREE.AnimationMixer(fbx);
-    const idle = mixer.clipAction(anim.animations[0]);
-    idle.play();
-  });
-  fbx.position.set(0, -3, 0.65);
-  fbx.rotation.y = Math.PI;
-  fbx.scale.set(0.03, 0.03, 0.03);
-  camera.add(fbx);
-});
-
-let reticle = new THREE.Mesh(
-  new THREE.RingBufferGeometry(0.85 * 0.05, 0.05, 32),
-  new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    blending: THREE.AdditiveBlending,
-    side: THREE.DoubleSide,
-  })
-);
-reticle.position.z = -3 * 0.5;
-camera.add(reticle);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-directionalLight.position.set(0, 10, 0)
-directionalLight.castShadow = true;
-scene.add(directionalLight);
-
-const listener = new THREE.AudioListener();
-camera.add(listener);
-
-const sound = new THREE.Audio(listener);
-
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load("./Assets/Audio/ambience.wav", function (buffer) {
-  sound.setBuffer(buffer);
-  sound.setLoop(true);
-  sound.setVolume(0.5);
-  sound.play();
-});
-
-const walkingSound = new THREE.Audio(listener);
-
-audioLoader.load("./Assets/Audio/walking.wav", function (buffer) {
-  walkingSound.setBuffer(buffer);
-  walkingSound.setLoop(true);
-  walkingSound.setVolume(0.9);
-});
-
-const gunSound = new THREE.Audio(listener);
-
-audioLoader.load("./Assets/Audio/gunshot.mp3", function (buffer) {
-  gunSound.setBuffer(buffer);
-  gunSound.setLoop(true);
-  gunSound.setVolume(0.5);
-});
-
-document.addEventListener("keydown", onKeyDown);
-document.addEventListener("keyup", onKeyUp);
-document.addEventListener("mousedown", mouseDown);
-document.addEventListener("mouseup", mouseUp);
-
-let prevTime = performance.now();
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * create a raycaster
+ */
+/*/------------------------------------------------------------------------------------------/*/
 let raycaster = new THREE.Raycaster(
   camera.getWorldPosition(new THREE.Vector3()),
   camera.getWorldDirection(new THREE.Vector3())
 );
-
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * animate function to render the game
+ */
+/*/------------------------------------------------------------------------------------------/*/
 const animate = () => {
   var delta = clock.getDelta();
-  var aispeed = delta * MOVESPEED;
+	var aispeed = delta * MOVESPEED;
   requestAnimationFrame(animate);
 
   const time = performance.now();
@@ -743,14 +465,15 @@ const animate = () => {
   
   renderer.render(scene, camera);
 };
-
+/*/------------------------------------------------------------------------------------------/*/
 animate();
 
+
+/*/------------------------------------------------------------------------------------------/*/
 window.addEventListener("resize", onWindowResize);
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
 
