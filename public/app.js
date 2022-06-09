@@ -868,13 +868,6 @@ const animate = () => {
         }
       }
     }
-<<<<<<< Updated upstream
-	}
-  SCORE = Math.abs(NUMAI - ai.length)
-    // Here is the user's score 
-  console.log("Current Score: " + SCORE);
-=======
-
     SCORE = Math.abs(NUMAI - ai.length)
     // Here is the user's score 
     console.log("Current Score: " + SCORE);
@@ -890,7 +883,6 @@ const animate = () => {
     console.log("Player wins")
   }
   
->>>>>>> Stashed changes
   renderer.render(scene, camera);
 };
 
