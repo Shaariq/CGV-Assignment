@@ -22,3 +22,5 @@ Open http://127.0.0.1:3000 to view the project.
 * Some lighting effects
 
 # Documentation 
+
+For this project, our group NoobieSoft, a group of 4 members were tasked to build a 3D computer game with 3 levels/stages that would be solely browser based using the Three.js graphics framework.
