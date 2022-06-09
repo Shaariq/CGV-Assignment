@@ -736,6 +736,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+directionalLight.position.set(0, 10, 0)
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
@@ -858,12 +859,10 @@ const animate = () => {
         }
       }
     }
-
-    SCORE = Math.abs(NUMAI - ai.length)
-    // Here is the user's score 
-    console.log("Current Score: " + SCORE);
-    
 	}
+  SCORE = Math.abs(NUMAI - ai.length)
+    // Here is the user's score 
+  console.log("Current Score: " + SCORE);
   renderer.render(scene, camera);
 };
 
