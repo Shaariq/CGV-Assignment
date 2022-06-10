@@ -7,9 +7,16 @@ var WALLHEIGHT = UNITSIZE / 3;
 var ai = []; // list to store all the AI bots 
 var aiGeo = new THREE.BoxGeometry(5,5,5); // the geometry of the AI bots
 var NUMAI = 5; // this is the number of bots that our game will have 
-var MOVESPEED = 10;
-let SCORE = 0;
+var MOVESPEED = 10; // this is to adjust the speed of the ai 
+let SCORE = 0; // helps keep score 
 
+/*/------------------------------------------------------------------------------------------/*/
+/**
+ * The variable map is used to help create the walls in our game as well as the mini map that
+ * helps. The 1's and 2's are used to indicate where the walls should be and the 0's indicate 
+ * open space.
+ */
+/*/------------------------------------------------------------------------------------------/*/
 var map = [ // 1  2  3  4  5  6  7  8  9
            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
            [1, 1, 0, 0, 0, 0, 0, 1, 1, 1,], // 1
@@ -24,7 +31,7 @@ var map = [ // 1  2  3  4  5  6  7  8  9
            ], mapW = map.length, mapH = map[0].length;
 /*/------------------------------------------------------------------------------------------/*/
 /**
- * A function that setup the walls
+ * A function that setup the walls, by creating two geometrices and applying textures to them
  */
 /*/------------------------------------------------------------------------------------------/*/
 function setWalls(){
@@ -36,9 +43,9 @@ function setWalls(){
 	                 new THREE.MeshLambertMaterial({/*color: 0xC5EDA0,*/map: THREE.ImageUtils.loadTexture('Assets/resources/wall-2.jpg')}),
 	                 new THREE.MeshLambertMaterial({color: 0xFBEBCD}),
 	                 ];
-	for (var i = 0; i < mapW; i++) {
+	for (var i = 0; i < mapW; i++) { // we traverse through the map matrix 
 		for (var j = 0, m = map[i].length; j < m; j++) {
-			if (map[i][j]) {
+			if (map[i][j]) { // where we have a 1 or 2 insert a wall 
 				var wall = new THREE.Mesh(cube, materials[map[i][j]-1]);
 				wall.position.x = (i - units/2) * UNITSIZE;
 				wall.position.y = WALLHEIGHT/2;
@@ -129,7 +136,7 @@ function distance(x1, y1, x2, y2) {
  *
  * @param v
  *   A THREE.Vector3 object representing a point in space.
- *   Passing cam.position is especially useful.
+ *
  * @returns {Boolean}
  *   true if the vector is inside a wall; false otherwise.
  */
