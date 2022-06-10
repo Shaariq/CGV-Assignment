@@ -28,6 +28,7 @@ Install Three.js as well:
 ```bash
 $npm install three
 ```
+Three.js is a 3D library that tries to make it as easy as possible to get 3D content on a webpage.
 
 This project uses a simple express.js server to run three.js. To start the server run:
 ```bash
@@ -36,6 +37,11 @@ $ npm start
 Open http://127.0.0.1:3000 to view the project. 
 
 # Design
+
+Since Three.js was being used, the design structure of the project followed the scene graph structure. A scene graph in a 3D engine is a hierarchy of nodes in a graph where each node represents a local space. 
+Three.js provides several types of materials. They define how objects will appear in the scene. 
+Textures are generally images that are most often created in some 3rd party program. Fixtures are implemented using a $ TextureLoader from Three.js.
+
 
 The Aim Trainer game begins with the user being placed in the game environment which consist of a plane/map, skybox and obstacles/walls which are placed on the map. The user will see a first person view of the gun as well as targets moving around the map. The user is also able to move around the map using WASD keys on a keyboard.
 
@@ -50,6 +56,8 @@ Furthermore, the game has various light sources placed around the world. These l
 # UI
 
 The Aim Trainer game has a start screen. On the start screen a begin game but then his present. Pressing this button will direct the user to the level selecting screen. The level selecting screen allows the user to select any one of three levels. When the user selects any of the levels they will be immediately brought into the game environment. In the game environment the user is available to do play the game in which case they will see the player model, the map, the mini map as well as targets and more. In the top right corner of the screen there are buttons to change the setting of the mapby way of changing skyboxes, and at the top left corner of the screen but then his present to return the user back to the level select screen.
+
+# Design Structure 
 
 
 
