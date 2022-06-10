@@ -24,6 +24,11 @@ First install dependencies:
 ```bash
 $ npm install
 ```
+Install Three.js as well:
+```bash
+$npm install three
+```
+
 This project uses a simple express.js server to run three.js. To start the server run:
 ```bash
 $ npm start
