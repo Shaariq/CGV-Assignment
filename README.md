@@ -40,3 +40,21 @@ The Aim Trainer game is designed to follow the following process. The user has a
 
 When bullets hit the targets the game will increase their score.
 
+Furthermore, the game has various light sources placed around the world. These light sources are used to generate lighting effects for the game environment . Additionally, the game has a third person feature in which the user can switch to a third person view. As well as, a minimap which is a aive representation of the ongoing game environment in a minimap view.
+
+# UI
+
+The Aim Trainer game has a start screen. On the start screen a begin game but then his present. Pressing this button will direct the user to the level selecting screen. The level selecting screen allows the user to select any one of three levels. When the user selects any of the levels they will be immediately brought into the game environment. In the game environment the user is available to do play the game in which case they will see the player model, the map, the mini map as well as targets and more. In the top right corner of the screen there are buttons to change the setting of the mapby way of changing skyboxes, and at the top left corner of the screen but then his present to return the user back to the level select screen.
+
+
+
+
+
+
+
+
+
+
+
+
+
