@@ -40,7 +40,7 @@ Open http://127.0.0.1:3000 to view the project.
 
 Since Three.js was being used, the design structure of the project followed the scene graph structure. A scene graph in a 3D engine is a hierarchy of nodes in a graph where each node represents a local space. 
 Three.js provides several types of materials. They define how objects will appear in the scene. 
-Textures are generally images that are most often created in some 3rd party program. Fixtures are implemented using a $TextureLoader from Three.js.
+Textures are generally images that are most often created in some 3rd party program. Fixtures are implemented using a $TextureLoader from Three.js. Lighting and cameras were also achieved through the Three.js framework.
 
 
 The Aim Trainer game begins with the user being placed in the game environment which consist of a plane/map, skybox and obstacles/walls which are placed on the map. The user will see a first person view of the gun as well as targets moving around the map. The user is also able to move around the map using WASD keys on a keyboard.
@@ -59,7 +59,11 @@ The Aim Trainer game has a start screen. On the start screen a begin game but th
 
 # Design Structure 
 
+Our design structure followed a hybrid approach of the waterfall development methodology as well as an AGILE development methodology. This is because we are we worked on the project on regular sprints as well as following a sequential development strategy as the one found in the waterfall development methodology. 
 
+The waterfall methodology was more prevalent as we first delineated our requirements then proceeded to analysis then design, coding testing and finally maintenance. And the AGILE Methodology was also followed as we would work on various features of the game in what are called sprints.
+
+Hence, the reason for saying that a hybrid design structure was followed in order to complete the project.
 
 
 
