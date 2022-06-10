@@ -29,3 +29,14 @@ This project uses a simple express.js server to run three.js. To start the serve
 $ npm start
 ```
 Open http://127.0.0.1:3000 to view the project. 
+
+# Design
+
+The Aim Trainer game begins with the user being placed in the game environment which consist of a plane/map, skybox and obstacles/walls which are placed on the map. The user will see a first person view of the gun as well as targets moving around the map. The user is also able to move around the map using WASD keys on a keyboard.
+
+When the left mouse button is clicked the gun will fire the stream of bullets. This is how user will shoot at the target. Thereby, exhibiting the shooting mechanics.
+
+The Aim Trainer game is designed to follow the following process. The user has a predetermined of time to shoot all the parts/targets. If if the user is able to shoot all the present targets in the amount of time given they will proceed to the next level. However, if the user is not able to shoot all the targets, this would result in a loss. Level one consists of an arbitrary number of targets moving at an arbitrary speed. Level 2 consists of more targets than in level one as well as moving at a faster speed than in level one period stop. Level three consists of even more targets moving at an even faster speed. 
+
+When bullets hit the targets the game will increase their score.
+
